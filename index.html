@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Robux">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<title>Robux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;background:#fff;font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}
+.app{position:relative;width:100%;height:100vh;height:-webkit-fill-available;height:100dvh;display:flex;flex-direction:column;background:#fff;color:#101014;font-size:14px;letter-spacing:-.1px;overflow:hidden;-webkit-user-select:none;user-select:none}
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid #f0f0f2;flex:none;z-index:5}
+.xbtn{width:42px;height:42px;border-radius:13px;background:#f2f2f4;border:0;display:grid;place-items:center;cursor:pointer;color:#101014;flex:none}
+.xbtn svg{width:19px;height:19px}
+.bal{display:flex;align-items:center;gap:7px;font-size:21px;font-weight:800;flex:1;cursor:pointer;min-width:0}
+.bal .hex{width:21px;height:21px;flex:none}
+.bal input{width:96px;border:0;outline:0;font-family:inherit;font-size:21px;font-weight:800;padding:0;background:#f2f2f4;border-radius:6px}
+.sendbtn{display:flex;align-items:center;gap:6px;background:#f2f2f4;border:0;border-radius:11px;padding:11px 15px;font-family:inherit;font-size:14.5px;font-weight:700;color:#101014;cursor:pointer}
+.sendbtn svg{width:15px;height:15px}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{display:none}
+.view{display:none;padding-bottom:26px}
+.view.active{display:block}
+.hero{position:relative;text-align:center;padding:52px 20px 40px;overflow:hidden}
+.hero .grid{position:absolute;inset:0;width:100%;height:100%}
+.hero h1{position:relative;margin:0;font-size:31px;line-height:1.1;font-weight:800;letter-spacing:-1.1px}
+.hero.small{padding:30px 18px 22px;text-align:left}
+.hero.small h1{font-size:28px}
+.hero.small p{position:relative;margin:8px 0 0;font-size:13px;color:#5c5c66}
+.sec{margin:0 16px 10px;font-size:19px;font-weight:800;letter-spacing:-.5px}
+.sec.big{font-size:25px;margin-top:30px}
+.card{margin:0 16px;border:1px solid #e6e6ea;border-radius:14px;overflow:hidden;background:#fafafb}
+.banner{background:#0d0d0f;line-height:0}
+.banner img{width:100%;display:block}
+.banner.noimg{height:70px;background:linear-gradient(120deg,#1a1a20,#2a2a35)}
+.rows{padding:2px 12px;background:#fafafb}
+.row{display:flex;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid #ededf0}
+.row:last-child{border-bottom:0}
+.row .info{display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:wrap;row-gap:4px}
+.row .hex{width:18px;height:18px;flex:none;color:#101014}
+.row .amt{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.row .old{display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:#b0b0b8;text-decoration:line-through}
+.row .old .hex{width:12px;height:12px}
+.row .more,.row .for{background:#e9e9ed;color:#4a4a54;font-size:10px;font-weight:700;border-radius:999px;padding:3px 7px;white-space:nowrap}
+.row .for{display:flex;align-items:center;gap:3px}
+.row .for svg{width:10px;height:10px}
+.price{border:0;background:#e9e9ed;color:#101014;border-radius:10px;padding:11px 0;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;width:80px;flex:none;text-align:center}
+.price.on{background:#2563eb;color:#fff}
+.price:active{transform:scale(.97)}
+.faq{padding:0 16px;display:grid;gap:8px}
+.faq details{border:1px solid #e6e6ea;border-radius:12px;padding:0 14px;background:#fff}
+.faq summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary svg{width:17px;height:17px;color:#6b6b75;flex:none;transition:.2s}
+.faq details[open] summary svg{transform:rotate(180deg)}
+.faq p{margin:0 0 13px;font-size:12.5px;line-height:1.5;color:#5c5c66}
+.legal{margin:20px 16px 0;font-size:11px;line-height:1.5;color:#8a8a93}
+.legal.center{text-align:center}
+.inp{display:flex;align-items:center;gap:9px;margin:0 16px 12px;border:1.5px solid #e2e2e6;border-radius:12px;padding:0 12px;background:#fff}
+.inp:focus-within{border-color:#101014}
+.inp svg{width:17px;height:17px;color:#6b6b75;flex:none}
+.inp input{flex:1;border:0;outline:0;background:none;font-family:inherit;font-size:16px;padding:13px 0;color:#101014;min-width:0}
+.inp.amount input{font-size:18px;font-weight:700}
+.spin-mini{width:15px;height:15px;border:2px solid #e2e2e6;border-top-color:#2563eb;border-radius:50%;animation:sp .7s linear infinite;flex:none}
+.chips{display:flex;gap:8px;padding:0 16px 18px}
+.chip{flex:1;border:1.5px solid #e2e2e6;background:#fff;border-radius:999px;padding:9px 0;font-family:inherit;font-size:13px;font-weight:700;color:#101014;cursor:pointer}
+.chip.on{background:#101014;border-color:#101014;color:#fff}
+.cta{display:block;width:calc(100% - 32px);margin:0 16px;background:#2563eb;color:#fff;border:0;border-radius:999px;padding:15px;font-family:inherit;font-size:15.5px;font-weight:800;cursor:pointer}
+.cta:disabled{background:#ececef;color:#9a9aa3}
+#profile:empty{display:none}
+.prof{margin:0 16px 14px;border:1px solid #e6e6ea;border-radius:14px;padding:10px;display:flex;gap:12px;align-items:center;background:#fafafb;animation:pop .18s}
+@keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.skin{width:86px;height:96px;flex:none;border-radius:10px;background:linear-gradient(160deg,#eef0f5,#e2e5ec);display:grid;place-items:center;overflow:hidden}
+.skin img{width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block}
+.skin .fb{font-size:24px;font-weight:800;color:#8a8a93}
+.prof .info{min-width:0;flex:1}
+.prof .dn{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof .un{font-size:12.5px;color:#7a7a84}
+.prof .meta{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:700;background:#efeff2;border-radius:999px;padding:3px 7px;color:#4a4a54;display:inline-flex;align-items:center;gap:3px}
+.tag.v{background:#e8efff;color:#2749c9}
+.tag svg{width:9px;height:9px}
+.prof .chg{font-size:11.5px;font-weight:700;color:#2563eb;background:none;border:0;cursor:pointer;font-family:inherit}
+.hist{padding:26px 16px 0}
+.hist h3{font-size:14px;margin:0 0 6px}
+.hrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eeeef1;font-size:13.5px}
+.hrow .hs{width:34px;height:34px;border-radius:8px;background:#f2f3f6;overflow:hidden;display:grid;place-items:center;font-size:12px;font-weight:800;color:#8a8a93}
+.hrow .hs img{width:100%;height:100%;object-fit:contain}
+.hrow .ha{margin-left:auto;font-weight:800}
+.tabbar{display:flex;flex:none;border-top:1px solid #ededf0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;font-family:inherit;font-size:10px;font-weight:600;color:#8a8a93;padding:4px 0;cursor:pointer}
+.tabbar svg{width:22px;height:22px}
+.tabbar button.on{color:#101014}
+.sheet-wrap{position:absolute;inset:0;z-index:40;pointer-events:none}
+.sheet-wrap.open{pointer-events:auto}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:.2s}
+.sheet-wrap.open .scrim{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:8px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:.25s cubic-bezier(.3,.9,.3,1)}
+.sheet-wrap.open .sheet{transform:translateY(0)}
+.grab{width:38px;height:4px;border-radius:99px;background:#dcdce0;margin:2px auto 14px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.sh-amt{display:flex;align-items:center;gap:8px;font-size:21px;font-weight:800}
+.sh-amt .hex{width:19px;height:19px}
+.sh-price{font-size:18px;font-weight:800}
+.sh-note{font-size:11.5px;color:#8a8a93;margin:0 0 14px}
+.payrow{display:flex;align-items:center;gap:10px;background:#f5f5f7;border-radius:11px;padding:11px;margin-bottom:14px}
+.card-ico{width:30px;height:21px;border-radius:4px;background:#e2e2e6;display:grid;place-items:center;font-size:8px;font-weight:700;color:#5c5c66}
+.payrow .pt{flex:1;font-size:12.5px;font-weight:600}
+.payrow .pt small{display:block;color:#8a8a93;font-weight:500;font-size:10.5px}
+.payrow .pe{font-size:12px;color:#2563eb;font-weight:700}
+.sheet .cta{width:100%;margin:0}
+.ghost{display:block;width:100%;background:none;border:0;padding:13px;font-family:inherit;font-size:13px;font-weight:700;color:#6b6b75;cursor:pointer}
+.modal-wrap{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:22px}
+.modal-wrap.open{display:flex}
+.modal{width:100%;max-width:360px;background:#fff;border-radius:18px;padding:20px 16px 14px;text-align:center;animation:pop .18s}
+.mico{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;font-size:24px;background:#e8f6ee;color:#0f7a4a}
+.modal h3{margin:0 0 6px;font-size:17px;font-weight:800}
+.modal p{margin:0 0 15px;font-size:12.5px;line-height:1.5;color:#5c5c66}
+.modal .cta{width:100%;margin:0}
+.rev{background:#f5f5f7;border-radius:11px;padding:10px 11px;margin-bottom:13px;text-align:left;font-size:12.5px}
+.rev .who{display:flex;align-items:center;gap:9px;padding-bottom:8px}
+.rev .who .hs{width:38px;height:38px;border-radius:8px;background:#eef0f4;overflow:hidden;display:grid;place-items:center;font-size:14px;font-weight:800;color:#8a8a93}
+.rev .who .hs img{width:100%;height:100%;object-fit:contain}
+.rev div.r{display:flex;justify-content:space-between;padding:4px 0;color:#5c5c66}
+.rev b{color:#101014}
+.spin{width:26px;height:26px;border:3px solid #e2e2e6;border-top-color:#2563eb;border-radius:50%;margin:6px auto 14px;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));background:#101014;color:#fff;font-size:12.5px;font-weight:600;padding:12px 14px;border-radius:11px;text-align:center;opacity:0;transform:translateY(10px);transition:.22s;pointer-events:none;z-index:70}
+.toast.on{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="xbtn" id="xBtn" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    <div class="bal" id="bal"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2.2 21 7v10l-9 4.8L3 17V7l9-4.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.2 8.6l6.2-1.6 1.6 6.2-6.2 1.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span id="balTxt">0</span></div>
+    <button class="sendbtn" id="sendBtn"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Send</button>
+  </header>
+  <div class="scroll" id="scroll">
+    <section class="view active" id="view-buy">
+      <div class="hero">
+        <svg class="grid" viewBox="0 0 400 200" preserveAspectRatio="none"><g fill="none" stroke="#e8e8ec" stroke-width=".8"><path d="M0 0q0 100 0 200M50 0q5 100 0 200M100 0q10 100 0 200M150 0q15 100 0 200M200 0q20 100 0 200M250 0q15 100 0 200M300 0q10 100 0 200M350 0q5 100 0 200M400 0q0 100 0 200M0 0q200 0 400 0M0 50q200 8 400 0M0 100q200 10 400 0M0 150q200 8 400 0M0 200q200 0 400 0"/></g></svg>
+        <h1>Enjoy up to 25% more Robux</h1>
+      </div>
+      <h2 class="sec">Bonus item we picked for you</h2>
+      <div class="card"><div class="banner"><img src="https://robuxsender.lovable.app/assets/brainrot-banner-q5z6g1ms.png" alt="Steal a Brainrot - 2x Money" onerror="this.parentElement.classList.add('noimg')"></div><div class="rows" id="bonusRows"></div></div>
+      <h2 class="sec">Robux packages</h2>
+      <div class="card"><div class="rows" id="pkgRows"></div></div>
+      <h2 class="sec big">FAQ</h2>
+      <div class="faq">
+        <details><summary>What are Robux?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></summary><p>Robux are the virtual currency used across Roblox experiences. You can spend them on items, avatar gear, game passes and more.</p></details>
+        <details><summary>Where are my Robux?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></summary><p>After purchase, Robux are credited to your balance, usually within a few minutes.</p></details>
+        <details><summary>Do Robux expire?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></summary><p>No. Once credited, they don't expire.</p></details>
+        <details><summary>How to redeem your gift card?<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></summary><p>Go to roblox.com/redeem, sign in, enter the PIN and tap Redeem.</p></details>
+      </div>
+      <p class="legal">When you buy Robux you receive only a limited, non-refundable, non-transferable, revocable license to use Robux, which has no value in real currency.</p>
+    </section>
+    <section class="view" id="view-send">
+      <div class="hero small"><h1>Send Robux</h1><p>Instant and fee-free with Roblox Plus.</p></div>
+      <div class="inp"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M16 16l4.6 4.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><input id="user" placeholder="Roblox username" autocomplete="off" spellcheck="false"><span class="spin-mini" id="spinMini" hidden></span></div>
+      <div id="profile"></div>
+      <div class="inp amount"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2.2 21 7v10l-9 4.8L3 17V7l9-4.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.2 8.6l6.2-1.6 1.6 6.2-6.2 1.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><input id="amount" type="number" inputmode="numeric" placeholder="0" min="1"></div>
+      <div class="chips" id="chips"></div>
+      <button class="cta" id="contBtn" disabled>Continue</button>
+      <p class="legal center">All transfers are final and can't be reversed.</p>
+      <div class="hist" id="hist" hidden><h3>Recent transfers</h3><div id="histList"></div></div>
+    </section>
+  </div>
+  <nav class="tabbar">
+    <button data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9.5 20v-5.5h5V20" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>Home</button>
+    <button data-t="charts"><svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>Charts</button>
+    <button data-t="create"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 8.5v7M8.5 12h7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Create</button>
+    <button data-t="robux"><svg viewBox="0 0 24 24"><path d="M12 2.2 21 7v10l-9 4.8L3 17V7l9-4.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.2 8.6l6.2-1.6 1.6 6.2-6.2 1.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Robux</button>
+    <button data-t="more"><svg viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="18.5" cy="12" r="1.8" fill="currentColor"/></svg>More</button>
+  </nav>
+  <div class="sheet-wrap" id="sheetWrap"><div class="scrim" id="scrim"></div><div class="sheet" id="sheet"></div></div>
+  <div class="modal-wrap" id="modalWrap"><div class="modal" id="modal"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script>
+const HEX='<svg class="hex" viewBox="0 0 24 24"><path d="M12 2.2 21 7v10l-9 4.8L3 17V7l9-4.8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.2 8.6l6.2-1.6 1.6 6.2-6.2 1.6z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+const BONUS=[[24000,22500,1500,"239.99"],[11000,10000,1000,"119.99"],[5250,4500,750,"59.99"],[3625,3150,475,"39.99"],[2000,1700,300,"23.99"]];
+const PKGS=[[1500,1200,300,"17.99"],[1000,800,200,"11.99"],[500,400,100,"5.99",true]];
+const fmt=n=>n.toLocaleString("en-US"),$=id=>document.getElementById(id);
+let bal=0,sel=null,rec=null,amt=0,seq=0;
+const rowHtml=([a,o,b,p,f])=>`<div class="row"><div class="info">${HEX}<span class="amt">${fmt(a)}</span><span class="old">${HEX}<span>${fmt(o)}</span></span><span class="more">+ ${fmt(b)} more</span>${f?`<span class="for"><svg viewBox="0 0 24 24"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.5l6.1-.7z" fill="currentColor"/></svg>For you</span>`:""}</div><button class="price ${f?'on':''}" data-p='${JSON.stringify([a,p])}'>€${p}</button></div>`;
+$("bonusRows").innerHTML=BONUS.map(rowHtml).join("");$("pkgRows").innerHTML=PKGS.map(rowHtml).join("");
+function view(v){document.querySelectorAll(".view").forEach(s=>s.classList.toggle("active",s.id==="view-"+v));$("scroll").scrollTop=0;}
+$("sendBtn").onclick=()=>view("send");$("xBtn").onclick=()=>{view("buy");resetSend();};
+document.querySelectorAll(".tabbar button").forEach(b=>b.onclick=()=>{
+  const t=b.dataset.t;document.querySelectorAll(".tabbar button").forEach(x=>x.classList.toggle("on",x===b));
+  if(t==="home"||t==="robux")view("buy");
+  else{toast(t[0].toUpperCase()+t.slice(1)+" — coming soon");setTimeout(()=>document.querySelectorAll(".tabbar button").forEach(x=>x.classList.toggle("on",x.dataset.t==="robux")),900);}
+});
+$("bal").onclick=()=>{if($("bal").querySelector("input"))return;$("bal").innerHTML=HEX+`<input id="balIn" inputmode="numeric" value="${bal}">`;const i=$("balIn");i.focus();i.select();i.onblur=()=>{bal=Math.max(0,parseInt(i.value.replace(/[^\d]/g,"")||"0",10));paintBal();};i.onkeydown=e=>{if(e.key==="Enter")i.blur();};};
+function paintBal(){$("bal").innerHTML=HEX+`<span id="balTxt">${fmt(bal)}</span>`;}
+paintBal();
+document.querySelectorAll(".price").forEach(b=>b.onclick=()=>{
+  const [a,p]=JSON.parse(b.dataset.p);sel={a,p};
+  $("sheet").innerHTML=`<div class="grab"></div><div class="sh-head"><div class="sh-amt">${HEX}${fmt(a)}</div><span class="sh-price">€${p}</span></div><p class="sh-note">Simulated payment — nothing is charged.</p><div class="payrow"><span class="card-ico">VISA</span><div class="pt">Visa •••• 4242<small>Default payment method</small></div><span class="pe">Change</span></div><button class="cta" id="buyNow">Pay €${p}</button><button class="ghost" id="cancel">Cancel</button>`;
+  $("sheetWrap").classList.add("open");$("cancel").onclick=closeSheet;$("buyNow").onclick=()=>{closeSheet();buy(sel.a);};
+});
+function closeSheet(){$("sheetWrap").classList.remove("open");}$("scrim").onclick=closeSheet;
+function buy(a){$("modal").innerHTML=`<div class="spin"></div><h3>Processing payment</h3><p>Connecting to the store…</p>`;$("modalWrap").classList.add("open");setTimeout(()=>{bal+=a;paintBal();$("modal").innerHTML=`<div class="mico">✓</div><h3>Purchase complete</h3><p>${fmt(a)} Robux were added to your balance.</p><button class="cta" id="okBtn">Done</button>`;$("okBtn").onclick=()=>$("modalWrap").classList.remove("open");toast(`${fmt(a)} Robux added`);},850);}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2400);}
+const cache=new Map();
+async function getJSON(u,o){const r=await fetch(u,o);if(!r.ok)throw new Error(r.status);return r.json();}
+async function searchExact(n){const d=await getJSON(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(n)}&limit=10`);return (d.data||[]).find(u=>u.name.toLowerCase()===n.toLowerCase())||null;}
+async function resolveUser(n){
+  const k=n.toLowerCase();if(cache.has(k))return cache.get(k);let hit=null;
+  try{const d=await getJSON("https://users.roblox.com/v1/usernames/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({usernames:[n],excludeBannedUsers:false})});if(d.data&&d.data.length)hit=d.data[0];}catch(e){}
+  if(!hit){try{hit=await searchExact(n);}catch(e){}}
+  if(!hit){try{const p="https://api.allorigins.win/raw?url="+encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(n)}&limit=10`);const d=await getJSON(p);hit=(d.data||[]).find(u=>u.name.toLowerCase()===n.toLowerCase())||null;}catch(e){}}
+  if(!hit){cache.set(k,null);return null;}
+  let skin=null,head=null,created=null;
+  try{const t=await getJSON(`https://thumbnails.roblox.com/v1/users/avatar?userIds=${hit.id}&size=420x420&format=Png&isCircular=false`);skin=(t.data&&t.data[0]&&t.data[0].state==="Completed")?t.data[0].imageUrl:null;}catch(e){}
+  try{const t=await getJSON(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${hit.id}&size=150x150&format=Png&isCircular=false`);head=(t.data&&t.data[0]&&t.data[0].state==="Completed")?t.data[0].imageUrl:null;}catch(e){}
+  try{const u=await getJSON(`https://users.roblox.com/v1/users/${hit.id}`);created=u.created||null;}catch(e){}
+  const out={user:hit.name,display:hit.displayName||hit.name,verified:!!hit.hasVerifiedBadge,skin,head,created};cache.set(k,out);return out;
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function showProfile(name,data){
+  const skin=data&&data.skin,disp=(data&&data.display)||name,y=data&&data.created?new Date(data.created).getFullYear():null;
+  $("profile").innerHTML=`<div class="prof"><div class="skin">${skin?`<img src="${skin}" alt="" onerror="this.remove()">`:`<span class="fb">${name[0].toUpperCase()}</span>`}</div><div class="info"><div class="dn">${esc(disp)}</div><div class="un">@${esc(name)}</div><div class="meta">${data&&data.verified?`<span class="tag v">✓ Verified</span>`:""}${y?`<span class="tag">Joined ${y}</span>`:""}<span class="tag">${skin?"Skin loaded":"Send to this user"}</span></div></div><button class="chg" id="chgBtn">Change</button></div>`;
+  $("chgBtn").onclick=()=>{resetSend();$("user").focus();};
+}
+let timer=null;
+$("user").addEventListener("input",()=>{
+  const n=$("user").value.trim().replace(/^@/,""),mine=++seq;clearTimeout(timer);
+  $("profile").innerHTML="";rec=n?{user:n,display:n,skin:null,head:null}:null;check();
+  if(!n){$("spinMini").hidden=true;return;}
+  showProfile(n,null);$("spinMini").hidden=false;
+  timer=setTimeout(async()=>{let f=null;try{f=await resolveUser(n);}catch(e){}if(mine!==seq)return;$("spinMini").hidden=true;if(!f)return;rec={...f};showProfile(f.user,f);},450);
+});
+function resetSend(){clearTimeout(timer);seq++;$("user").value="";$("amount").value="";$("profile").innerHTML="";$("spinMini").hidden=true;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));rec=null;check();}
+$("chips").innerHTML=[50,100,250,500].map(c=>`<button class="chip" data-v="${c}">${c}</button>`).join("");
+$("chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");$("amount").value=c.dataset.v;check();});
+$("amount").oninput=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));check();};
+function check(){amt=parseInt($("amount").value||"0",10);$("contBtn").disabled=!(rec&&amt>0);}
+$("contBtn").onclick=()=>{
+  if(!rec)return;if(amt>bal){toast("Not enough Robux. Top up first.");return;}
+  $("modal").innerHTML=`<h3>Review transfer</h3><div class="rev"><div class="who"><span class="hs">${rec.skin?`<img src="${rec.skin}" alt="">`:rec.user[0].toUpperCase()}</span><span><b>${esc(rec.display)}</b><br><small style="color:#7a7a84">@${esc(rec.user)}</small></span></div><div class="r"><span>Amount</span><b>${fmt(amt)} Robux</b></div><div class="r"><span>Fee</span><b>0 Robux</b></div></div><p style="text-align:left">Transfers are final. Make sure the username is right.</p><button class="cta" id="sendNow">Send ${fmt(amt)} Robux</button><button class="ghost" id="back">Back</button>`;
+  $("modalWrap").classList.add("open");$("back").onclick=()=>$("modalWrap").classList.remove("open");
+  $("sendNow").onclick=()=>{
+    bal-=amt;paintBal();$("hist").hidden=false;
+    const r=document.createElement("div");r.className="hrow";
+    r.innerHTML=`<span class="hs">${rec.head?`<img src="${rec.head}" alt="">`:rec.user[0].toUpperCase()}</span><span>@${esc(rec.user)}<br><small style="color:#8a8a93;font-size:11px">Just now</small></span><span class="ha">−${fmt(amt)}</span>`;
+    $("histList").prepend(r);
+    $("modal").innerHTML=`<div class="mico">✓</div><h3>Robux sent</h3><p>${fmt(amt)} Robux were delivered to @${esc(rec.user)}.</p><button class="cta" id="ok2">Done</button>`;
+    $("ok2").onclick=()=>$("modalWrap").classList.remove("open");resetSend();
+  };
+};
+</script>
+</body>
+</html>
